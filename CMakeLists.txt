@@ -12,14 +12,23 @@ project(carma-clock
 	VERSION 0.0.1
     LANGUAGES CXX
 )
+
+include_directories(/usr/include/python3.10)
+
 find_package(Threads)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+
+find_package(Boost COMPONENTS python REQUIRED)
+# find_package(PythonLibs3.10 REQUIRED)
 
 
 add_library(${PROJECT_NAME} SHARED)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     SOVERSION 1
 )
+
+
+# target_link_libraries(${PROJECT_NAME} PUBLIC python boost::python  )
 
 include(CommonSource)
 include(Testing)

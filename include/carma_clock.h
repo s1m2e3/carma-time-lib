@@ -20,6 +20,8 @@
 #include <condition_variable>
 #include <mutex>
 #include <vector>
+#include <boost/python.hpp>
+#include <boost/noncopyable.hpp>
 
 namespace fwha_stol::lib::time {
 
@@ -37,7 +39,7 @@ using sleepValuePair = std::pair<timeStampMilliseconds, sleepCVPair>;
  * No interpolation is performed; the most recently received simulation time point is considered to
  * be current.
  */
-class CarmaClock {
+class CarmaClock{
 public:
     /**
      * @brief Create a clock instance using read time mode (default) or simulation mode.
@@ -48,6 +50,15 @@ public:
      * @brief Destructor
     */
     ~CarmaClock() = default;
+    
+    // Public move constructor and move assignment operator
+    CarmaClock(const CarmaClock&); // Deleted copy constructor
+    CarmaClock& operator=(const CarmaClock&) = delete; // Deleted copy assignment operator
+    CarmaClock(CarmaClock&&) = delete; // Deleted move constructor
+    CarmaClock& operator=(CarmaClock&&) = delete; // Deleted move assignment operator
+  
+
+
 
 public:
     /**
@@ -98,7 +109,10 @@ public:
     */
     void sleep_for(timeStampMilliseconds time_to_sleep);
 
+
 private:
+
+
     // Current simulation time
     timeStampMilliseconds _current_time = 0;
 
@@ -126,6 +140,8 @@ private:
     // time update will only notify a single thread for each entry. Multiple threads waiting on 
     // the same time should each have their one entry in this vector.
     std::vector <sleepValuePair> _sleep_holder;
+
+    
 };
 
 }

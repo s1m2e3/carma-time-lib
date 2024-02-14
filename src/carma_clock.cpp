@@ -25,6 +25,29 @@ CarmaClock::CarmaClock(bool simulation_mode) : _is_simulation_mode(simulation_mo
     // ready to go if not sim mode
     _is_initialized = ! _is_simulation_mode;
 }
+// // Copy constructor
+CarmaClock::CarmaClock(const CarmaClock& other) 
+    : _current_time(other._current_time),
+      _is_simulation_mode(other._is_simulation_mode),
+      _is_initialized(other._is_initialized),
+      _sleep_holder(other._sleep_holder) {
+    // Copy mutexes and condition variables
+    // No direct copy is allowed for mutexes and condition variables, 
+    // so we need to create new ones and leave the original ones in a
+    // valid but unspecified state.
+    // We'll just ensure that the new object has its own unique mutexes
+    // and condition variables.
+    // This will allow the copied object to function properly, but it won't
+    // have the same threads blocked on it as the original.
+    // for (const auto& sleep_entry : _sleep_holder) {
+    //     std::mutex mutex;
+    //     std::condition_variable cv;
+    //     // We are not copying threads blocked on these mutexes and condition variables.
+    //     // So, the copied object will have empty mutexes and condition variables.
+    //     _sleep_holder.emplace_back(sleep_entry.first, std::move(mutex), std::move(cv));
+    // }
+}
+
 
 timeStampMilliseconds CarmaClock::nowInMilliseconds() const {
     if (_is_simulation_mode) {
